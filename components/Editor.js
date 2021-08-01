@@ -1,9 +1,3 @@
-import { useEditor, EditorContent } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import Placeholder from "@tiptap/extension-placeholder";
-import EditorLink from "@tiptap/extension-link";
-import EditorImage from "@tiptap/extension-image";
-import ExternalVideo from "./external-video";
 import {
   Eraser,
   Image,
@@ -16,6 +10,15 @@ import {
   TextItalic,
   VideoCamera,
 } from "phosphor-react";
+import tippy from "tippy.js";
+import { useEditor, EditorContent, ReactRenderer } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import Placeholder from "@tiptap/extension-placeholder";
+import EditorLink from "@tiptap/extension-link";
+import EditorImage from "@tiptap/extension-image";
+import ExternalVideo from "./external-video";
+import Mention from "@tiptap/extension-mention";
+import { MentionList } from "./MentionList";
 
 const iconClass = "h-4 w-4";
 const buttonClass =
@@ -28,7 +31,7 @@ const MenuBar = ({ editor }) => {
   }
 
   return (
-    <div className="flex space-x-1 p-1.5">
+    <div className="flex space-x-1 sticky bottom-0 p-1.5">
       <button
         onClick={() => editor.chain().focus().toggleBold().run()}
         className={editor.isActive("bold") ? activeclass : buttonClass}
@@ -142,6 +145,83 @@ const Editor = () => {
       Placeholder.configure({
         placeholder: "Remember, the more you tell, the more we know.",
       }),
+      Mention.configure({
+        HTMLAttributes: {
+          class: "p-0.5 bg-blue-100 text-blue-700 rounded",
+        },
+        suggestion: {
+          items: (query) => {
+            return [
+              "Praveen Juge",
+              "Lea Thompson",
+              "Cyndi Lauper",
+              "Tom Cruise",
+              "Madonna",
+              "Jerry Hall",
+              "Joan Collins",
+              "Winona Ryder",
+              "Christina Applegate",
+              "Alyssa Milano",
+              "Molly Ringwald",
+              "Ally Sheedy",
+              "Debbie Harry",
+              "Olivia Newton-John",
+              "Elton John",
+              "Michael J. Fox",
+              "Axl Rose",
+              "Emilio Estevez",
+              "Ralph Macchio",
+              "Rob Lowe",
+              "Jennifer Grey",
+              "Mickey Rourke",
+              "John Cusack",
+              "Matthew Broderick",
+              "Justine Bateman",
+              "Lisa Bonet",
+            ]
+              .filter((item) =>
+                item.toLowerCase().startsWith(query.toLowerCase())
+              )
+              .slice(0, 5);
+          },
+          render: () => {
+            let reactRenderer;
+            let popup;
+            return {
+              onStart: (props) => {
+                reactRenderer = new ReactRenderer(MentionList, {
+                  props,
+                  editor: props.editor,
+                });
+
+                popup = tippy("body", {
+                  getReferenceClientRect: props.clientRect,
+                  appendTo: () => document.body,
+                  content: reactRenderer.element,
+                  showOnCreate: true,
+                  interactive: true,
+                  trigger: "manual",
+                  placement: "bottom-start",
+                });
+              },
+              onUpdate(props) {
+                reactRenderer.updateProps(props);
+
+                popup[0].setProps({
+                  getReferenceClientRect: props.clientRect,
+                });
+              },
+              onKeyDown(props) {
+                return reactRenderer.ref?.onKeyDown(props);
+              },
+              onExit() {
+                popup[0].destroy();
+                reactRenderer.destroy();
+              },
+            };
+          },
+        },
+      }),
     ],
     editorProps: {
       attributes: {
@@ -154,6 +234,9 @@ const Editor = () => {
       </h2>
       <p>
         this is a <em>basic</em> example of <strong>tiptap</strong>. Sure, there are all kind of basic text styles you’d probably expect from a text editor. But wait until you see the lists:
+      </p>
+      <p>
+        What do you all think about the new <span data-mention data-id="Winona Ryder"></span> <span data-mention data-id="Praveen Juge"></span> movie?
       </p>
       <p>
         Wow, this editor has support for links to the whole <a href="https://en.wikipedia.org/wiki/World_Wide_Web">world wide web</a>. We tested a lot of URLs and I think you can add *every URL* you want. Isn’t that cool? Let’s try <a href="https://statamic.com/">another one!</a> Yep, seems to work.
@@ -189,7 +272,7 @@ const Editor = () => {
   return (
     <>
       <span className="text-sm text-gray-600 block mb-1">Your Thoughts:</span>
-      <div className="flex flex-col bg-white border rounded shadow-sm focus-within:border-gray-400 hover:border-gray-400">
+      <div className="transition flex flex-col bg-white border rounded shadow-sm focus-within:border-gray-400 hover:border-gray-400">
         <EditorContent editor={editor} />
         <MenuBar editor={editor} />
       </div>
