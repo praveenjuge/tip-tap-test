@@ -75,7 +75,7 @@ export class MentionList extends React.Component {
           >
             <img
               src="https://praveenjuge.com/images/praveen-juge-photo.jpg"
-              className="h-4 w-4 rounded-full"
+              className="h-4 w-4 rounded-full bg-gray-100"
             />
             <span>{item}</span>
           </button>
