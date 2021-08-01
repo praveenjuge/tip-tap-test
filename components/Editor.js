@@ -21,9 +21,11 @@ import Mention from "@tiptap/extension-mention";
 import { MentionList } from "./MentionList";
 
 const iconClass = "h-4 w-4";
+const defaultButtonClass =
+  "rounded p-1 focus:bg-gray-200 focus:outline-none disabled:opacity-50 disabled:pointer-events-none";
 const buttonClass =
-  "rounded p-1 bg-white hover:bg-gray-100 text-gray-600 disabled:opacity-50 disabled:pointer-events-none";
-const activeclass = "rounded p-1 text-white bg-black";
+  defaultButtonClass + ` bg-white hover:bg-gray-100 text-gray-600`;
+const activeclass = defaultButtonClass + ` text-white bg-black`;
 
 const MenuBar = ({ editor }) => {
   if (!editor) {
@@ -31,7 +33,7 @@ const MenuBar = ({ editor }) => {
   }
 
   return (
-    <div className="flex space-x-1 sticky bottom-0 p-1.5">
+    <div className="flex space-x-1 sticky bottom-0 p-1.5 bg-white rounded-b">
       <button
         onClick={() => editor.chain().focus().toggleBold().run()}
         className={editor.isActive("bold") ? activeclass : buttonClass}
@@ -242,7 +244,7 @@ const Editor = () => {
         Wow, this editor has support for links to the whole <a href="https://en.wikipedia.org/wiki/World_Wide_Web">world wide web</a>. We tested a lot of URLs and I think you can add *every URL* you want. Isn’t that cool? Let’s try <a href="https://statamic.com/">another one!</a> Yep, seems to work.
       </p>
       <p>
-        By default every link will get a \`rel="noopener noreferrer nofollow"\` attribute. It’s configurable though.
+        By default every link will get a <code>rel="noopener noreferrer nofollow"</code> attribute. It’s configurable though.
       </p>
       <ul>
         <li>
