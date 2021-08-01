@@ -1,10 +1,12 @@
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
+import EditorLink from "@tiptap/extension-link";
 import {
   Eraser,
   Image,
   Link,
+  LinkBreak,
   ListBullets,
   TextBolder,
   TextHOne,
@@ -62,6 +64,14 @@ const MenuBar = ({ editor }) => {
       <button className={buttonClass} disabled>
         <Link weight="bold" className={iconClass} />
       </button>
+      {editor.isActive("link") && (
+        <button
+          className={buttonClass}
+          onClick={() => editor.chain().focus().unsetLink().run()}
+        >
+          <LinkBreak weight="bold" className={iconClass} />
+        </button>
+      )}
       <button className={buttonClass} disabled>
         <Image weight="bold" className={iconClass} />
       </button>
@@ -84,6 +94,7 @@ const Editor = () => {
   const editor = useEditor({
     extensions: [
       StarterKit,
+      EditorLink,
       Placeholder.configure({
         placeholder: "Remember, the more you tell, the more we know.",
       }),
@@ -99,6 +110,12 @@ const Editor = () => {
       </h2>
       <p>
         this is a <em>basic</em> example of <strong>tiptap</strong>. Sure, there are all kind of basic text styles you’d probably expect from a text editor. But wait until you see the lists:
+      </p>
+      <p>
+        Wow, this editor has support for links to the whole <a href="https://en.wikipedia.org/wiki/World_Wide_Web">world wide web</a>. We tested a lot of URLs and I think you can add *every URL* you want. Isn’t that cool? Let’s try <a href="https://statamic.com/">another one!</a> Yep, seems to work.
+      </p>
+      <p>
+        By default every link will get a \`rel="noopener noreferrer nofollow"\` attribute. It’s configurable though.
       </p>
       <ul>
         <li>
