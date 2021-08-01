@@ -6,13 +6,16 @@
     "start": "next start"
   },
   "dependencies": {
+    "@tailwindcss/typography": "^0.4.1",
+    "@tiptap/extension-placeholder": "^2.0.0-beta.26",
+    "@tiptap/react": "^2.0.0-beta.55",
+    "@tiptap/starter-kit": "^2.0.0-beta.89",
+    "autoprefixer": "^10.3.1",
     "next": "latest",
+    "phosphor-react": "^1.3.1",
+    "postcss": "^8.3.6",
     "react": "^17.0.2",
-    "react-dom": "^17.0.2"
-  },
-  "devDependencies": {
-    "autoprefixer": "^10.2.6",
-    "postcss": "^8.3.5",
-    "tailwindcss": "^2.2.4"
+    "react-dom": "^17.0.2",
+    "tailwindcss": "^2.2.7"
   }
 }
