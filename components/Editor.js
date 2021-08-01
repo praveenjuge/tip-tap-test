@@ -3,6 +3,7 @@ import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
 import EditorLink from "@tiptap/extension-link";
 import EditorImage from "@tiptap/extension-image";
+import ExternalVideo from "./external-video";
 import {
   Eraser,
   Image,
@@ -13,7 +14,7 @@ import {
   TextHOne,
   TextHTwo,
   TextItalic,
-  YoutubeLogo,
+  VideoCamera,
 } from "phosphor-react";
 
 const iconClass = "h-4 w-4";
@@ -27,7 +28,7 @@ const MenuBar = ({ editor }) => {
   }
 
   return (
-    <div className="flex space-x-1 w-full p-2">
+    <div className="flex space-x-1 p-1.5">
       <button
         onClick={() => editor.chain().focus().toggleBold().run()}
         className={editor.isActive("bold") ? activeclass : buttonClass}
@@ -76,8 +77,8 @@ const MenuBar = ({ editor }) => {
       <button className={buttonClass} onClick={() => addImage(editor)}>
         <Image weight="bold" className={iconClass} />
       </button>
-      <button className={buttonClass} disabled>
-        <YoutubeLogo weight="bold" className={iconClass} />
+      <button className={buttonClass} onClick={() => addVideo(editor)}>
+        <VideoCamera weight="bold" className={iconClass} />
       </button>
       <button
         className={buttonClass}
@@ -92,10 +93,23 @@ const MenuBar = ({ editor }) => {
 };
 
 const addImage = (editor) => {
-  const url = window.prompt("URL");
+  const url = window.prompt(
+    "URL",
+    "https://praveenjuge.com/images/praveen-juge-photo.jpg"
+  );
 
   if (url) {
     editor.chain().focus().setImage({ src: url }).run();
+  }
+};
+
+const addVideo = (editor) => {
+  const url = window.prompt(
+    "YouTube, Loom or Vimeo URL",
+    "https://www.youtube.com/embed/iyd8dY8rRtA"
+  );
+  if (url) {
+    editor.chain().focus().setExternalVideo({ src: url }).run();
   }
 };
 
@@ -108,7 +122,10 @@ const CustomLink = EditorLink.extend({
 });
 
 const setLink = (editor) => {
-  const url = window.prompt("URL");
+  const url = window.prompt(
+    "URL",
+    "https://praveenjuge.com/images/praveen-juge-photo.jpg"
+  );
 
   if (url) {
     editor.chain().focus().extendMarkRange("link").setLink({ href: url }).run();
@@ -121,6 +138,7 @@ const Editor = () => {
       StarterKit,
       EditorImage,
       CustomLink,
+      ExternalVideo,
       Placeholder.configure({
         placeholder: "Remember, the more you tell, the more we know.",
       }),
@@ -171,7 +189,7 @@ const Editor = () => {
   return (
     <>
       <span className="text-sm text-gray-600 block mb-1">Your Thoughts:</span>
-      <div className="flex flex-col bg-white border rounded shadow-sm focus-within:border-gray-400">
+      <div className="flex flex-col bg-white border rounded shadow-sm focus-within:border-gray-400 hover:border-gray-400">
         <EditorContent editor={editor} />
         <MenuBar editor={editor} />
       </div>
