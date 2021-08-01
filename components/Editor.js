@@ -236,7 +236,7 @@ export default function Editor({ content }) {
   return (
     <div>
       <span className="text-sm text-gray-600 block mb-1">Your Thoughts:</span>
-      <div className="transition flex flex-col bg-white border rounded shadow-sm focus-within:border-gray-400 hover:border-gray-400">
+      <div className="transition flex flex-col bg-white border rounded shadow-sm focus-within:border-gray-400 hover:border-gray-400 min-h-[188px]">
         <EditorContent editor={editor} />
         <MenuBar editor={editor} />
       </div>
