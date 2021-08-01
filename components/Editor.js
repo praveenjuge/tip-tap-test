@@ -2,6 +2,7 @@ import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
 import EditorLink from "@tiptap/extension-link";
+import EditorImage from "@tiptap/extension-image";
 import {
   Eraser,
   Image,
@@ -61,7 +62,7 @@ const MenuBar = ({ editor }) => {
       >
         <ListBullets weight="bold" className={iconClass} />
       </button>
-      <button className={buttonClass} disabled>
+      <button className={buttonClass} onClick={() => setLink(editor)}>
         <Link weight="bold" className={iconClass} />
       </button>
       {editor.isActive("link") && (
@@ -72,7 +73,7 @@ const MenuBar = ({ editor }) => {
           <LinkBreak weight="bold" className={iconClass} />
         </button>
       )}
-      <button className={buttonClass} disabled>
+      <button className={buttonClass} onClick={() => addImage(editor)}>
         <Image weight="bold" className={iconClass} />
       </button>
       <button className={buttonClass} disabled>
@@ -90,18 +91,43 @@ const MenuBar = ({ editor }) => {
   );
 };
 
+const addImage = (editor) => {
+  const url = window.prompt("URL");
+
+  if (url) {
+    editor.chain().focus().setImage({ src: url }).run();
+  }
+};
+
+const CustomLink = EditorLink.extend({
+  addKeyboardShortcuts() {
+    return {
+      "Mod-k": () => setLink(this.editor),
+    };
+  },
+});
+
+const setLink = (editor) => {
+  const url = window.prompt("URL");
+
+  if (url) {
+    editor.chain().focus().extendMarkRange("link").setLink({ href: url }).run();
+  }
+};
+
 const Editor = () => {
   const editor = useEditor({
     extensions: [
       StarterKit,
-      EditorLink,
+      EditorImage,
+      CustomLink,
       Placeholder.configure({
         placeholder: "Remember, the more you tell, the more we know.",
       }),
     ],
     editorProps: {
       attributes: {
-        class: "prose prose-sm p-3 focus:outline-none max-w-none min-h-[220px]",
+        class: "prose prose-sm p-3 focus:outline-none max-w-none min-h-[200px]",
       },
     },
     content: `

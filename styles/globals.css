@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-.ProseMirror p.is-editor-empty:first-child::before {
+.ProseMirror .is-editor-empty:first-child::before {
   @apply float-left text-gray-400 pointer-events-none h-0;
   content: attr(data-placeholder);
 }
